@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_fleet_driver_list" model="ir.ui.view">
+        <field name="name">fleet.driver.list</field>
+        <field name="model">fleet.driver</field>
+        <field name="arch" type="xml">
+            <list string="Chauffeurs">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="license_number"/>
+                <field name="license_type"/>
+                <field name="license_expiry"/>
+                <field name="department_id"/>
+                <field name="state" widget="badge"
+                        decoration-success="state == 'active'"
+                        decoration-muted="state == 'inactive'"
+                        decoration-danger="state == 'suspended'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_fleet_driver_form" model="ir.ui.view">
+        <field name="name">fleet.driver.form</field>
+        <field name="model">fleet.driver</field>
+        <field name="arch" type="xml">
+            <form string="Chauffeur">
+                <header>
+                    <button name="action_set_active" string="Activer" type="object"
+                            invisible="state == 'active'" class="oe_highlight"/>
+                    <button name="action_set_inactive" string="Désactiver" type="object"
+                            invisible="state == 'inactive'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,inactive,suspended"/>
+                </header>
+                <sheet>
+                    <field name="image_128" widget="image" class="oe_avatar"/>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nom complet"/>
+                        </h1>
+                        <field name="code"/>
+                    </div>
+
+                    <group>
+                        <group string="Contact">
+                            <field name="phone"/>
+                            <field name="mobile"/>
+                            <field name="email"/>
+                            <field name="address"/>
+                        </group>
+                        <group string="Permis de conduire">
+                            <field name="license_number"/>
+                            <field name="license_type"/>
+                            <field name="license_expiry"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Organisation">
+                            <field name="department_id"/>
+                            <field name="employee_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <field name="notes" placeholder="Notes diverses..."/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fleet_driver_search" model="ir.ui.view">
+        <field name="name">fleet.driver.search</field>
+        <field name="model">fleet.driver</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher chauffeurs">
+                <field name="name"/>
+                <field name="license_number"/>
+                <field name="phone"/>
+                <filter string="Actifs" name="active" domain="[('state', '=', 'active')]"/>
+                <filter string="Inactifs" name="inactive" domain="[('state', '=', 'inactive')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="État" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Direction" name="group_department" context="{'group_by': 'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_fleet_driver" model="ir.actions.act_window">
+        <field name="name">Chauffeurs</field>
+        <field name="res_model">fleet.driver</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_fleet_driver_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Créer le premier chauffeur</p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_fleet_insurance_list" model="ir.ui.view">
+        <field name="name">fleet.insurance.list</field>
+        <field name="model">fleet.insurance</field>
+        <field name="arch" type="xml">
+            <list string="Assurances">
+                <field name="name"/>
+                <field name="vehicle_id"/>
+                <field name="insurer_id"/>
+                <field name="insurance_type"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="amount" sum="Total"/>
+                <field name="state" widget="badge"
+                        decoration-success="state == 'running'"
+                        decoration-danger="state == 'expired'"
+                        decoration-muted="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_fleet_insurance_form" model="ir.ui.view">
+        <field name="name">fleet.insurance.form</field>
+        <field name="model">fleet.insurance</field>
+        <field name="arch" type="xml">
+            <form string="Assurance">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,running,expired"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="N° de police"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="vehicle_id"/>
+                            <field name="insurer_id"/>
+                            <field name="insurance_type"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="amount"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fleet_insurance_search" model="ir.ui.view">
+        <field name="name">fleet.insurance.search</field>
+        <field name="model">fleet.insurance</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher assurances">
+                <field name="vehicle_id"/>
+                <field name="insurer_id"/>
+                <filter string="En cours" name="running" domain="[('state', '=', 'running')]"/>
+                <filter string="Expirées" name="expired" domain="[('state', '=', 'expired')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Véhicule" name="group_vehicle" context="{'group_by': 'vehicle_id'}"/>
+                    <filter string="Compagnie" name="group_insurer" context="{'group_by': 'insurer_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_fleet_insurance_calendar" model="ir.ui.view">
+        <field name="name">fleet.insurance.calendar</field>
+        <field name="model">fleet.insurance</field>
+        <field name="arch" type="xml">
+            <calendar string="Assurances" date_start="start_date" date_stop="end_date" color="state" mode="month">
+                <field name="vehicle_id"/>
+                <field name="insurer_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_fleet_insurance" model="ir.actions.act_window">
+        <field name="name">Assurances</field>
+        <field name="res_model">fleet.insurance</field>
+        <field name="view_mode">list,form,calendar</field>
+        <field name="search_view_id" ref="view_fleet_insurance_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Créer la première police d'assurance</p>
+        </field>
+    </record>
+
+</odoo>

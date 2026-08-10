@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menu racine de l'application -->
+    <menuitem id="menu_fleet_root"
+              name="Parc Automobile"
+              web_icon="gestion_parc_automobile,static/description/icon.png"
+              sequence="25"/>
+
+    <!-- Véhicules -->
+    <menuitem id="menu_fleet_vehicle"
+              name="Véhicules"
+              parent="menu_fleet_root"
+              action="action_fleet_vehicle"
+              sequence="10"/>
+
+    <!-- Chauffeurs -->
+    <menuitem id="menu_fleet_driver"
+              name="Chauffeurs"
+              parent="menu_fleet_root"
+              action="action_fleet_driver"
+              sequence="20"/>
+
+    <!-- Affectations -->
+    <menuitem id="menu_fleet_assignment"
+              name="Affectations"
+              parent="menu_fleet_root"
+              action="action_fleet_assignment"
+              sequence="30"/>
+
+    <!-- Garages / Fournisseurs -->
+    <menuitem id="menu_fleet_garage"
+              name="Garages / Fournisseurs"
+              parent="menu_fleet_root"
+              action="action_fleet_garage"
+              sequence="35"/>
+
+    <!-- Entretiens -->
+    <menuitem id="menu_fleet_maintenance"
+              name="Entretiens"
+              parent="menu_fleet_root"
+              action="action_fleet_maintenance"
+              sequence="40"/>
+
+    <!-- Carburant -->
+    <menuitem id="menu_fleet_fuel_log"
+              name="Carburant"
+              parent="menu_fleet_root"
+              action="action_fleet_fuel_log"
+              sequence="50"/>
+
+    <!-- Assurances -->
+    <menuitem id="menu_fleet_insurance"
+              name="Assurances"
+              parent="menu_fleet_root"
+              action="action_fleet_insurance"
+              sequence="60"/>
+
+    <!-- Contrôles techniques -->
+    <menuitem id="menu_fleet_technical_control"
+              name="Contrôles Techniques"
+              parent="menu_fleet_root"
+              action="action_fleet_technical_control"
+              sequence="70"/>
+
+    <!-- Sinistres -->
+    <menuitem id="menu_fleet_claim"
+              name="Sinistres"
+              parent="menu_fleet_root"
+              action="action_fleet_claim"
+              sequence="80"/>
+
+</odoo>

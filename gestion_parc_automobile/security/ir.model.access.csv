@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fleet_vehicle_user,fleet.vehicle.user,model_fleet_vehicle,base.group_user,1,1,1,1
+access_fleet_driver_user,fleet.driver.user,model_fleet_driver,base.group_user,1,1,1,1
+access_fleet_assignment_user,fleet.assignment.user,model_fleet_assignment,base.group_user,1,1,1,1
+access_fleet_maintenance_user,fleet.maintenance.user,model_fleet_maintenance,base.group_user,1,1,1,1
+access_fleet_fuel_log_user,fleet.fuel.log.user,model_fleet_fuel_log,base.group_user,1,1,1,1
+access_fleet_insurance_user,fleet.insurance.user,model_fleet_insurance,base.group_user,1,1,1,1
+access_fleet_technical_control_user,fleet.technical.control.user,model_fleet_technical_control,base.group_user,1,1,1,1
+access_fleet_claim_user,fleet.claim.user,model_fleet_claim,base.group_user,1,1,1,1

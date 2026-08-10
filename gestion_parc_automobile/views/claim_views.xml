@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_fleet_claim_list" model="ir.ui.view">
+        <field name="name">fleet.claim.list</field>
+        <field name="model">fleet.claim</field>
+        <field name="arch" type="xml">
+            <list string="Sinistres">
+                <field name="name"/>
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <field name="date"/>
+                <field name="claim_type"/>
+                <field name="cost" sum="Total"/>
+                <field name="state" widget="badge"
+                        decoration-warning="state == 'declared'"
+                        decoration-info="state == 'in_progress'"
+                        decoration-success="state == 'closed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_fleet_claim_form" model="ir.ui.view">
+        <field name="name">fleet.claim.form</field>
+        <field name="model">fleet.claim</field>
+        <field name="arch" type="xml">
+            <form string="Sinistre">
+                <header>
+                    <button name="action_declare" string="Déclarer" type="object"
+                            invisible="state != 'draft'" class="oe_highlight"/>
+                    <button name="action_close" string="Clôturer" type="object"
+                            invisible="state not in ('declared', 'in_progress')" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,declared,in_progress,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="vehicle_id"/>
+                            <field name="driver_id"/>
+                            <field name="date"/>
+                            <field name="claim_type"/>
+                            <field name="location"/>
+                        </group>
+                        <group>
+                            <field name="cost"/>
+                            <field name="insurance_covered"/>
+                            <field name="insurance_refund" invisible="not insurance_covered"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" placeholder="Description du sinistre..."/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fleet_claim_search" model="ir.ui.view">
+        <field name="name">fleet.claim.search</field>
+        <field name="model">fleet.claim</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher sinistres">
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <filter string="Déclarés" name="declared" domain="[('state', '=', 'declared')]"/>
+                <filter string="Clôturés" name="closed" domain="[('state', '=', 'closed')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Véhicule" name="group_vehicle" context="{'group_by': 'vehicle_id'}"/>
+                    <filter string="Type" name="group_type" context="{'group_by': 'claim_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_fleet_claim" model="ir.actions.act_window">
+        <field name="name">Sinistres</field>
+        <field name="res_model">fleet.claim</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_fleet_claim_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Déclarer le premier sinistre</p>
+        </field>
+    </record>
+
+</odoo>

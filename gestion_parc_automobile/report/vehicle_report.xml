@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Action de rapport : bouton "Imprimer" sur la fiche véhicule -->
+    <record id="action_report_fleet_vehicle" model="ir.actions.report">
+        <field name="name">Fiche Véhicule</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">gestion_parc_automobile.report_fleet_vehicle_document</field>
+        <field name="report_file">gestion_parc_automobile.report_fleet_vehicle_document</field>
+        <field name="binding_model_id" ref="model_fleet_vehicle"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Fiche Véhicule - %s' % (object.name)</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_fleet_vehicle_list" model="ir.ui.view">
+        <field name="name">fleet.vehicle.list</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="arch" type="xml">
+            <list string="Véhicules" sample="1">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="license_plate"/>
+                <field name="brand"/>
+                <field name="model"/>
+                <field name="driver_id"/>
+                <field name="odometer"/>
+                <field name="total_operating_cost" sum="Total"/>
+                <field name="state" widget="badge"
+                        decoration-success="state == 'available'"
+                        decoration-info="state == 'assigned'"
+                        decoration-warning="state == 'maintenance'"
+                        decoration-danger="state == 'out_of_service'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_fleet_vehicle_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="Véhicule">
+                <header>
+                    <button name="action_set_available" string="Disponible" type="object"
+                            invisible="state == 'available'" class="oe_highlight"/>
+                    <button name="action_set_maintenance" string="Mettre en entretien" type="object"
+                            invisible="state == 'maintenance'"/>
+                    <button name="action_set_out_of_service" string="Hors service" type="object"
+                            invisible="state == 'out_of_service'"/>
+                    <field name="state" widget="statusbar"
+                            statusbar_visible="draft,available,assigned,maintenance,out_of_service"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_assignments" type="object" class="oe_stat_button" icon="fa-exchange">
+                            <field name="assignment_count" widget="statinfo" string="Affectations"/>
+                        </button>
+                        <button name="action_view_maintenances" type="object" class="oe_stat_button" icon="fa-wrench">
+                            <field name="maintenance_count" widget="statinfo" string="Entretiens"/>
+                        </button>
+                        <button name="action_view_fuel_logs" type="object" class="oe_stat_button" icon="fa-tint">
+                            <field name="fuel_count" widget="statinfo" string="Carburant"/>
+                        </button>
+                    </div>
+
+                    <field name="image_128" widget="image" class="oe_avatar"/>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Ex: Toyota Corolla - DG"/>
+                        </h1>
+                        <field name="code"/>
+                    </div>
+
+                    <group>
+                        <group string="Identification">
+                            <field name="license_plate"/>
+                            <field name="brand"/>
+                            <field name="model"/>
+                            <field name="category"/>
+                            <field name="vehicle_type"/>
+                            <field name="year"/>
+                            <field name="color"/>
+                            <field name="chassis_number"/>
+                            <field name="engine_number"/>
+                        </group>
+                        <group string="Caractéristiques">
+                            <field name="fuel_type"/>
+                            <field name="seats"/>
+                            <field name="doors"/>
+                            <field name="odometer"/>
+                            <field name="odometer_unit"/>
+                            <field name="acquisition_date"/>
+                            <field name="acquisition_price"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Organisation">
+                            <field name="department_id"/>
+                            <field name="driver_id"/>
+                            <field name="location"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Échéances">
+                            <field name="next_insurance_date"/>
+                            <field name="next_technical_date"/>
+                            <field name="next_maintenance_date"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Coûts d'exploitation" name="costs">
+                            <group>
+                                <group>
+                                    <field name="total_fuel_cost"/>
+                                    <field name="total_maintenance_cost"/>
+                                    <field name="total_insurance_cost"/>
+                                    <field name="total_claim_cost"/>
+                                </group>
+                                <group>
+                                    <field name="total_operating_cost"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Observations diverses..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fleet_vehicle_search" model="ir.ui.view">
+        <field name="name">fleet.vehicle.search</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher véhicules">
+                <field name="name"/>
+                <field name="license_plate"/>
+                <field name="code"/>
+                <field name="driver_id"/>
+                <field name="brand"/>
+                <filter string="Disponibles" name="available" domain="[('state', '=', 'available')]"/>
+                <filter string="Affectés" name="assigned" domain="[('state', '=', 'assigned')]"/>
+                <filter string="En entretien" name="maintenance" domain="[('state', '=', 'maintenance')]"/>
+                <filter string="Hors service" name="out_of_service" domain="[('state', '=', 'out_of_service')]"/>
+                <separator/>
+                <filter string="Archivés" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="État" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Direction" name="group_department" context="{'group_by': 'department_id'}"/>
+                    <filter string="Type de carburant" name="group_fuel" context="{'group_by': 'fuel_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_fleet_vehicle" model="ir.actions.act_window">
+        <field name="name">Véhicules</field>
+        <field name="res_model">fleet.vehicle</field>
+        <field name="view_mode">list,form,kanban,graph,pivot</field>
+        <field name="search_view_id" ref="view_fleet_vehicle_search"/>
+        <field name="context">{'search_default_available': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Créer le premier véhicule</p>
+            <p>Gérez l'ensemble de votre parc automobile ici.</p>
+        </field>
+    </record>
+
+</odoo>

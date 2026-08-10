@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_fleet_vehicle_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+
+                        <h2>
+                            Fiche Véhicule : <span t-field="o.name"/>
+                        </h2>
+                        <p>
+                            Code interne : <span t-field="o.code"/> —
+                            Immatriculation : <span t-field="o.license_plate"/>
+                        </p>
+
+                        <table class="table table-sm" style="margin-top: 20px;">
+                            <tr>
+                                <td><strong>Marque</strong></td>
+                                <td><span t-field="o.brand"/></td>
+                                <td><strong>Modèle</strong></td>
+                                <td><span t-field="o.model"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Catégorie</strong></td>
+                                <td><span t-field="o.category"/></td>
+                                <td><strong>Année</strong></td>
+                                <td><span t-field="o.year"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Type de carburant</strong></td>
+                                <td><span t-field="o.fuel_type"/></td>
+                                <td><strong>Kilométrage</strong></td>
+                                <td><span t-field="o.odometer"/> km</td>
+                            </tr>
+                            <tr>
+                                <td><strong>État</strong></td>
+                                <td><span t-field="o.state"/></td>
+                                <td><strong>Chauffeur actuel</strong></td>
+                                <td><span t-field="o.driver_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Direction / Service</strong></td>
+                                <td><span t-field="o.department_id.name"/></td>
+                                <td><strong>Localisation</strong></td>
+                                <td><span t-field="o.location"/></td>
+                            </tr>
+                        </table>
+
+                        <h3 style="margin-top: 30px;">Coûts d'exploitation</h3>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Poste</th>
+                                    <th class="text-end">Montant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Carburant</td>
+                                    <td class="text-end"><span t-field="o.total_fuel_cost"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Entretiens</td>
+                                    <td class="text-end"><span t-field="o.total_maintenance_cost"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Assurances</td>
+                                    <td class="text-end"><span t-field="o.total_insurance_cost"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Sinistres</td>
+                                    <td class="text-end"><span t-field="o.total_claim_cost"/></td>
+                                </tr>
+                                <tr style="font-weight: bold; border-top: 2px solid black;">
+                                    <td>Total</td>
+                                    <td class="text-end"><span t-field="o.total_operating_cost"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3 style="margin-top: 30px;">Historique des entretiens</h3>
+                        <table class="table table-sm table-bordered" t-if="o.maintenance_ids">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Garage</th>
+                                    <th class="text-end">Coût</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.maintenance_ids" t-as="m">
+                                    <td><span t-field="m.date"/></td>
+                                    <td><span t-field="m.maintenance_type"/></td>
+                                    <td><span t-field="m.garage_id.name"/></td>
+                                    <td class="text-end"><span t-field="m.cost"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p t-if="not o.maintenance_ids">Aucun entretien enregistré.</p>
+
+                        <h3 style="margin-top: 30px;">Échéances à venir</h3>
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>Prochaine assurance</strong></td>
+                                <td><span t-field="o.next_insurance_date"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Prochain contrôle technique</strong></td>
+                                <td><span t-field="o.next_technical_date"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Prochain entretien</strong></td>
+                                <td><span t-field="o.next_maintenance_date"/></td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_fleet_assignment_list" model="ir.ui.view">
+        <field name="name">fleet.assignment.list</field>
+        <field name="model">fleet.assignment</field>
+        <field name="arch" type="xml">
+            <list string="Affectations">
+                <field name="name"/>
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <field name="department_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="assignment_type"/>
+                <field name="state" widget="badge"
+                        decoration-success="state == 'running'"
+                        decoration-muted="state == 'done'"
+                        decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_fleet_assignment_form" model="ir.ui.view">
+        <field name="name">fleet.assignment.form</field>
+        <field name="model">fleet.assignment</field>
+        <field name="arch" type="xml">
+            <form string="Affectation">
+                <header>
+                    <button name="action_start" string="Démarrer" type="object"
+                            invisible="state != 'draft'" class="oe_highlight"/>
+                    <button name="action_done" string="Terminer" type="object"
+                            invisible="state != 'running'" class="oe_highlight"/>
+                    <button name="action_cancel" string="Annuler" type="object"
+                            invisible="state in ('done', 'cancelled')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,running,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="vehicle_id"/>
+                            <field name="assignment_type"/>
+                            <field name="driver_id" invisible="assignment_type != 'driver'"/>
+                            <field name="department_id" invisible="assignment_type == 'driver'"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="odometer_start"/>
+                            <field name="odometer_end"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes" placeholder="Motif de l'affectation..."/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fleet_assignment_search" model="ir.ui.view">
+        <field name="name">fleet.assignment.search</field>
+        <field name="model">fleet.assignment</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher affectations">
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <filter string="En cours" name="running" domain="[('state', '=', 'running')]"/>
+                <filter string="Terminées" name="done" domain="[('state', '=', 'done')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Véhicule" name="group_vehicle" context="{'group_by': 'vehicle_id'}"/>
+                    <filter string="Chauffeur" name="group_driver" context="{'group_by': 'driver_id'}"/>
+                    <filter string="État" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_fleet_assignment_calendar" model="ir.ui.view">
+        <field name="name">fleet.assignment.calendar</field>
+        <field name="model">fleet.assignment</field>
+        <field name="arch" type="xml">
+            <calendar string="Affectations" date_start="date_start" date_stop="date_end" color="state" mode="month">
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_fleet_assignment" model="ir.actions.act_window">
+        <field name="name">Affectations</field>
+        <field name="res_model">fleet.assignment</field>
+        <field name="view_mode">list,form,calendar</field>
+        <field name="search_view_id" ref="view_fleet_assignment_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Créer la première affectation</p>
+        </field>
+    </record>
+
+</odoo>
